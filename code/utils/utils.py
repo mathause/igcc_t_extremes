@@ -1,4 +1,5 @@
 import pathlib
+from dataclasses import dataclass
 
 import numpy as np
 import xarray as xr
@@ -51,3 +52,21 @@ def land_mean(da, land_mask):
 def calc_anomaly(data, clim_period, dim="year"):
 
     return data - data.sel({dim: clim_period}).mean(dim)
+
+
+@dataclass
+class Decade:
+    start: int
+    remove: bool = True
+
+    @property
+    def stop(self):
+        return self.start + 10 - 1
+
+    @property
+    def slice(self):
+        return slice(self.start, self.stop)
+
+    @property
+    def key(self):
+        return f"{self.start}–{self.stop}"
